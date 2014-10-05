@@ -1,0 +1,156 @@
+#include <stdio.h>
+
+
+
+#define MAX_ARR_LEN 1000
+
+void printArr(int array[], int length){
+	int i;
+	for(i=0;i<length;i++){
+		printf("%d \n",array[i]);	
+	}
+
+}
+
+int populate_array(int array[], char* fileName){
+	FILE *ptr_file;
+    	//printf("my file name is %s",input);
+	int num=0;
+    	ptr_file =fopen(fileName,"r");
+    	if (!ptr_file){
+        	return -1;
+	}
+	
+
+	while(num<MAX_ARR_LEN && fscanf(ptr_file, "%d", &array[num])!=EOF){
+		num++;
+	}
+	
+
+	fclose(ptr_file);
+    	return num;
+
+}
+
+int is_sorted(int array[], int length) {
+
+	int i;
+
+	for (i = 0; i < length-1; ++i) {
+
+		if (array[i] > array[i+1]) {
+
+			return 0;
+
+		}
+
+	}
+
+	return 1;
+
+} 
+
+
+void merge(int array[], int low, int mid,int high){
+	int leftIndex=low;
+	int rightIndex=mid+1;
+	int combinedIndex=low;
+	int tempArray[high-low+1];
+	//merge the subarray until the end of one is reach
+	
+	while(leftIndex<=mid&&rightIndex<=high){
+		if(array[leftIndex]<array[rightIndex]){
+			tempArray[combinedIndex]=array[leftIndex];
+			combinedIndex++;
+			leftIndex++;
+		}else{
+			tempArray[combinedIndex]=array[rightIndex];
+			combinedIndex++;
+			rightIndex++;
+		}
+
+	}
+
+	if(leftIndex==mid+1){
+		while(rightIndex<=high){
+			tempArray[combinedIndex]=array[rightIndex];
+			combinedIndex++;
+			rightIndex++;
+		}
+	}else{
+		while(leftIndex<=mid){
+			tempArray[combinedIndex]=array[leftIndex];
+			combinedIndex++;
+			leftIndex++;
+		}
+	}
+
+	int i=0;
+	for(i=low;i<=high;i++){
+		array[i]=tempArray[i];
+	}
+
+}
+
+void mergeSort(int array[], int low, int high){
+	
+	if(low<high){
+		int middle=low+(high-low)/2;
+		
+		mergeSort(array,low,middle);
+		mergeSort(array,middle+1,high);
+		merge(array,low,middle,high);
+
+	}
+
+}
+
+int magic_numbers(int array[], int low, int high){
+	if(high<low){
+		return -1;
+	}else{
+		int mid=(low+high)/2;
+		if(array[mid]>mid){
+			return magic_numbers(array,low,mid-1);
+		}else if(array[mid]<mid){
+			return magic_numbers(array,mid+1,high);
+		}else{
+			return mid;
+		}
+
+	}
+
+}
+
+int main(int args, char* argv[]){
+	
+	if(args==1){
+		printf("Incorrect number of command line arguments\n");
+		printf("Correct usage: ./a.out input file\n");
+		return -1;	
+	}
+	int array [MAX_ARR_LEN];
+	int length=populate_array(array, argv[1]);
+
+	mergeSort(array,0,length-1);
+	if(is_sorted(array,length)==0){
+		printf("The array is not sorted\n");
+	}else{
+		printf("The array is sorted\n");
+	}	
+	
+	
+	
+	printArr(array,length);
+	int result=magic_numbers(array,0,length-1);
+	
+	if(result==-1){
+		printf("There is no magic number");
+	}else{
+		printf("The magic number is %d\n",result);
+	}
+	
+	return 0;
+}
+
+
