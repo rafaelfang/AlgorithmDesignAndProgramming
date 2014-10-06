@@ -1,0 +1,2 @@
+AA AAA D 10
+AA BBB C 12
