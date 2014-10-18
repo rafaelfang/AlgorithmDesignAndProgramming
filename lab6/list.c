@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include "list.h"
+
+
+
+node* insert_at_head(node* list, int data){
+
+	node* head=malloc(sizeof(node));
+	head->data=data;
+	head->next=list;
+	return head;
+}
+
+node* insert_at_tail(node* list, int data){
+	node* tail=list;
+	node* newNode=malloc(sizeof(node));
+	newNode->data=data;
+	newNode->next=NULL;
+	if(list==NULL){
+		return newNode;
+	}
+	while(tail->next!=NULL){
+		tail=tail->next;
+	}
+	tail->next=newNode;
+	return list;
+
+}
+
+node* delete_from_head(node* list){
+	if(list==NULL){
+		return NULL;
+	}
+	list=list->next;
+	return list;
+}
+
+node* delete_from_tail(node* list){
+	if(list==NULL){
+		return NULL;
+	}else if(list->next==NULL){
+		return NULL;
+	}
+	node* prev=list;
+	node* tail=prev->next;
+	while(tail->next!=NULL){
+		prev=prev->next;
+		tail=tail->next;
+	}
+	prev->next=NULL;
+	
+	return list;
+}
+
+void print_list(node* list){
+	node* cur=list;
+	while(cur!=NULL){
+		printf("%d->", cur->data);
+		cur=cur->next;
+	}
+	printf("NULL\n");
+}
+
+void free_list(node* list){
+
+	
+	while(list!=NULL){
+		node* prev =list;
+		list=list->next;
+		free(list);
+	}
+	
+
+}
+
+node* reverse_list(node* list){
+
+	if(list==NULL){
+		return NULL;
+	}else if(list->next==NULL){
+		return list;
+	}else{
+		node* next=list->next;
+		node* rev=reverse_list(next);
+		next->next=list;
+		list->next=NULL;
+		return rev;
+	}
+
+}
