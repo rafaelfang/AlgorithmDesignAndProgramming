@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "BST.h"
+
+
+
+int main(int argc, char* argv[]){
+	if(argc!=4){
+		printf("Incorrect number of command line arguments\n");
+		printf("Correct usage: ./a.out <input.txt> <a number> <bonus>\n");
+		return -1;	
+	}
+	BST* tree=NULL;
+	int temp;
+	FILE *ptr;
+	ptr =fopen(argv[1],"r");
+	if (!ptr){
+        	return;
+	}
+	while(fscanf(ptr, "%d", &temp)!=EOF){
+		tree= insert(tree,temp);	
+	}
+	inorder(tree);
+	printf("\n");
+	BST* found= find(tree,atoi(argv[2]));
+	if(found==NULL){
+		printf("%s was not found!\n",argv[2]);
+	}else{
+		printf("%s was found!\n",argv[2]);
+	}
+	BST* result=nearest(tree, atoi(argv[3]));
+	printf("%s is the cosest number to %d\n",argv[3],result->data);
+	return 0;
+}
+
